@@ -2,6 +2,7 @@ package main
 
 import (
 	"haste/config"
+	"haste/lib/web"
 	"net/http"
 	"strconv"
 
@@ -15,6 +16,8 @@ func main() {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome to Haste!"))
 	})
+
+	router.Mount("/users", web.Router())
 
 	http.ListenAndServe(":"+strconv.Itoa(config.App().Port), router)
 }
