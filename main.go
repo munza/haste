@@ -1,22 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"haste/config"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	cfgdb := config.Database()
-	fmt.Println(cfgdb.Port)
-
 	router := chi.NewRouter()
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome to haste!"))
+		w.Write([]byte("welcome to Haste!"))
 	})
 
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":"+strconv.Itoa(config.App().Port), router)
 }

@@ -7,6 +7,7 @@ import (
 )
 
 type database struct {
+	Driver   string `env:"DB_DRIVER"   envDefault:"sqlite"`
 	Host     string `env:"DB_HOST"     envDefault:"127.0.0.1"`
 	Port     int    `env:"DB_PORT"     envDefault:"3306"`
 	Name     string `env:"DB_NAME"     envDefault:"haste_db"`
