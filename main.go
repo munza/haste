@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	// fmt.Println(config.Get("Database.Missing"))
+
 	router := chi.NewRouter()
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
