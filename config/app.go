@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/caarlos0/env"
 )
 
@@ -16,11 +14,6 @@ type app struct {
 
 func App() *app {
 	cfg := &app{}
-
-	err := env.Parse(cfg)
-	if err != nil {
-		fmt.Printf("%+v", err)
-	}
-
+	env.Parse(cfg)
 	return cfg
 }

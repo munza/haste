@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/caarlos0/env"
 )
 
@@ -17,11 +15,6 @@ type database struct {
 
 func Database() *database {
 	cfg := &database{}
-
-	err := env.Parse(cfg)
-	if err != nil {
-		fmt.Printf("%+v", err)
-	}
-
+	env.Parse(cfg)
 	return cfg
 }
