@@ -5,11 +5,11 @@ import (
 )
 
 type app struct {
-	Environtment string `env:"APP_ENV"    envDefault:"development"`
-	Name         string `env:"APP_NAME"   envDefault:"Haste"`
-	URL          string `env:"APP_URL"    envDefault:"http://127.0.0.1"`
-	Port         int    `env:"APP_PORT"   envDefault:"3000"`
-	SecretKey    string `env:"SECRET_KEY" envDefault:"somesupersecretkey"`
+	Environment string `env:"APP_ENV"    envDefault:"development"`
+	Name        string `env:"APP_NAME"   envDefault:"Haste"`
+	URL         string `env:"APP_URL"    envDefault:"http://127.0.0.1"`
+	Port        int    `env:"APP_PORT"   envDefault:"3000"`
+	SecretKey   string `env:"SECRET_KEY" envDefault:"somesupersecretkey"`
 }
 
 func App() *app {
