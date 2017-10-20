@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -16,8 +17,7 @@ import (
 
 func main() {
 	if len(os.Args) == 1 {
-		fmt.Println(help())
-		os.Exit(0)
+		help()
 	}
 
 	switch os.Args[1] {
@@ -27,24 +27,41 @@ func main() {
 		down()
 	case "redo":
 		redo()
+	case "reset":
+		reset()
+		os.Exit(0)
+	case "refresh":
+		reset()
+		up()
 	case "status":
 		status()
 	case "new":
 		new()
+	case "help":
+		help()
 	default:
 		fmt.Printf("Unknows command '%s' for cmd/migrate.go\n", os.Args[1])
 	}
+
+	os.Exit(0)
 }
 
 func up() {
-	err := applyMigrations(migrate.Up, false, 0)
+	err := applyMigrations(migrate.Up, isDryrun(), getLimit(0))
 	if err != nil {
 		panic(err)
 	}
 }
 
 func down() {
-	err := applyMigrations(migrate.Down, false, 1)
+	err := applyMigrations(migrate.Down, isDryrun(), getLimit(1))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func reset() {
+	err := applyMigrations(migrate.Down, isDryrun(), 0)
 	if err != nil {
 		panic(err)
 	}
@@ -63,17 +80,22 @@ func redo() {
 		fmt.Println("Nothing to do!")
 	}
 
-	_, err = migrate.ExecMax(db, dialect, source, migrate.Down, 1)
-	if err != nil {
-		fmt.Printf("Migration (down) failed: %s\n", err)
-	}
+	if isDryrun() {
+		printMigration(migrations[0], migrate.Down)
+		printMigration(migrations[0], migrate.Up)
+	} else {
+		_, err = migrate.ExecMax(db, dialect, source, migrate.Down, 1)
+		if err != nil {
+			fmt.Printf("Migration (down) failed: %s\n", err)
+		}
 
-	_, err = migrate.ExecMax(db, dialect, source, migrate.Up, 1)
-	if err != nil {
-		fmt.Printf("Migration (up) failed: %s\n", err)
-	}
+		_, err = migrate.ExecMax(db, dialect, source, migrate.Up, 1)
+		if err != nil {
+			fmt.Printf("Migration (up) failed: %s\n", err)
+		}
 
-	fmt.Printf("Reapplied migration %s.\n", migrations[0].Id)
+		fmt.Printf("Reapplied migration %s.\n", migrations[0].Id)
+	}
 }
 
 func status() {
@@ -119,8 +141,6 @@ func status() {
 	}
 
 	table.Render()
-
-	os.Exit(0)
 }
 
 func new() {
@@ -157,10 +177,15 @@ func applyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int) err
 			return fmt.Errorf("Migration failed: %s", err)
 		}
 
+		action := "Applied"
+		if dir > 0 {
+			action = "Rollback"
+		}
+
 		if n == 1 {
-			fmt.Println("Applied 1 migration")
+			fmt.Printf("%s 1 migration\n", action)
 		} else {
-			fmt.Printf("Applied %d migrations\n", n)
+			fmt.Printf("%s %d migrations\n", action, n)
 		}
 	}
 
@@ -232,19 +257,53 @@ func createMigration(name string) error {
 	}
 
 	fmt.Printf("Created migration %s\n", pathName)
+
 	return nil
 }
 
-func help() string {
-	return `Usage: go run cmd/migrate.go COMMAND
+func isDryrun() bool {
+	var dryrun bool
+
+	for _, value := range os.Args {
+		if value == "-dryrun" || value == "--dryrun" {
+			dryrun = true
+		}
+	}
+
+	return dryrun
+}
+
+func getLimit(defaultval int) int {
+	limit := defaultval
+
+	for i, value := range os.Args {
+		if value == "-limit" || value == "--limit" {
+			if l, err := strconv.Atoi(os.Args[i+1]); err == nil {
+				limit = l
+			}
+		}
+	}
+
+	return limit
+}
+
+func help() {
+	fmt.Println(`Usage: go run cmd/migrate.go COMMAND [Options]
 
 Available Commands:
-    up          Migrates the database to the most recent version available.
-    down        Undo a database migration.
-    redo        Reapply the last migration.
-    status      Show migration status.
-    new         Create a new a database migration.
-`
+    up [N=0]        Migrates the database to the most recent version available.
+    down            Undo a database migration.
+    redo            Reapply the last migration.
+    refresh         Reapply all migrations.
+    status          Show migration status.
+    new             Create a new a database migration.
+    help            Show the usage instruction.
+
+Avaliable Options:
+
+    -dryrun         Don't apply migrations, just print them.
+    -limit [N=0]    Limit the number of migrations (0 = unlimited).
+`)
 }
 
 type statusRow struct {
