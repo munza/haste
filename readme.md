@@ -8,7 +8,7 @@ Go web application starter repository.
 - [x] Configuration
 - [x] Environment
 - [x] Router
-- [ ] Migration
+- [x] Migration
 - [ ] Seed
 - [ ] Assets
 - [ ] Database
