@@ -1,13 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"haste/config"
 	"net/http"
 
 	"github.com/go-chi/chi"
 )
 
 func main() {
-	// fmt.Println(config.Get("Database.Missing"))
+	cfgdb := config.Database()
+	fmt.Println(cfgdb.Port)
 
 	router := chi.NewRouter()
 

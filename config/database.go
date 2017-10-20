@@ -1,9 +1,26 @@
 package config
 
-type Database struct {
-	Host     string `default:"127.0.0.1"`
-	Port     int    `default:"3306"`
-	Name     string `default:"haste_db"`
-	Username string `default:"root"`
-	Password string `default:"root"`
+import (
+	"fmt"
+
+	"github.com/caarlos0/env"
+)
+
+type database struct {
+	Host     string `env:"DB_HOST"     envDefault:"127.0.0.1"`
+	Port     int    `env:"DB_PORT"     envDefault:"3306"`
+	Name     string `env:"DB_NAME"     envDefault:"haste_db"`
+	Username string `env:"DB_USERNAME" envDefault:"root"`
+	Password string `env:"DB_PASSWORD" envDefault:"root"`
+}
+
+func Database() *database {
+	cfg := &database{}
+
+	err := env.Parse(cfg)
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+
+	return cfg
 }
