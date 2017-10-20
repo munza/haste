@@ -14,14 +14,44 @@
   version = "v3.3.0"
 
 [[projects]]
-  name = "github.com/joho/godotenv"
+  name = "github.com/go-sql-driver/mysql"
   packages = ["."]
+  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
+  version = "v1.3"
+
+[[projects]]
+  name = "github.com/joho/godotenv"
+  packages = [".","autoload"]
   revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
   version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
+  version = "v0.0.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/olekukonko/tablewriter"
+  packages = ["."]
+  revision = "a7a4c189eb47ed33ce7b35f2880070a0c82a67d4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/rubenv/sql-migrate"
+  packages = [".","sqlparse"]
+  revision = "79fe99e24311fa42469fb2ca23eb3f8f065e6155"
+
+[[projects]]
+  name = "gopkg.in/gorp.v1"
+  packages = ["."]
+  revision = "c87af80f3cc5036b55b83d77171e156791085e2e"
+  version = "v1.7.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4b5318214b470711b1dcb8443aac98262ed75bafadac8763b4616d441d430ecd"
+  inputs-digest = "2e5d8c2431cf487dbcf3f014fd589254f6933b19a7923fba5019cda89a77f85f"
   solver-name = "gps-cdcl"
   solver-version = 1
