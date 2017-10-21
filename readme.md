@@ -11,10 +11,10 @@ Go web application starter repository.
 - [x] Migration
 - [ ] Seed
 - [ ] Assets
-- [ ] Database
-- [ ] ORM
-- [ ] Model
-- [ ] Repository
+- [z] Database
+- [x] ORM
+- [x] Model
+- [x] Repository
 - [x] Controller
 - [ ] Middleware
 - [ ] Template
