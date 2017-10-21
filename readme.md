@@ -11,7 +11,7 @@ Go web application starter repository.
 - [x] Migration
 - [ ] Seed
 - [ ] Assets
-- [z] Database
+- [x] Database
 - [x] ORM
 - [x] Model
 - [x] Repository
