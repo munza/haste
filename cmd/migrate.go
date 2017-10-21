@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"haste/config"
 	"html/template"
 	"os"
 	"path"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/olekukonko/tablewriter"
 	migrate "github.com/rubenv/sql-migrate"
 )
@@ -18,6 +20,7 @@ import (
 func main() {
 	if len(os.Args) == 1 {
 		help()
+		os.Exit(0)
 	}
 
 	switch os.Args[1] {
@@ -29,7 +32,6 @@ func main() {
 		redo()
 	case "reset":
 		reset()
-		os.Exit(0)
 	case "refresh":
 		reset()
 		up()
@@ -210,7 +212,7 @@ func printMigration(m *migrate.PlannedMigration, dir migrate.MigrationDirection)
 
 func getSources() (migrate.FileMigrationSource, []*migrate.Migration) {
 	source := migrate.FileMigrationSource{
-		Dir: "db/migrations",
+		Dir: config.Database().MigrationPath,
 	}
 
 	migrations, err := source.FindMigrations()
@@ -222,7 +224,9 @@ func getSources() (migrate.FileMigrationSource, []*migrate.Migration) {
 }
 
 func getDBConnection() (*sql.DB, string, error) {
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:33061)/hastedb?parseTime=true")
+	connSrc := config.Database().Username + ":" + config.Database().Password + "@tcp(" + config.Database().Host + ":" + strconv.Itoa(config.Database().Port) + ")/" + config.Database().Name + "?parseTime=true"
+
+	db, err := sql.Open(config.Database().Driver, connSrc)
 	if err != nil {
 		return nil, "", fmt.Errorf("Cannot connect to database: %s", err)
 	}
@@ -231,7 +235,7 @@ func getDBConnection() (*sql.DB, string, error) {
 }
 
 func createMigration(name string) error {
-	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
+	if _, err := os.Stat(config.Database().MigrationPath); os.IsNotExist(err) {
 		panic(err)
 	}
 
@@ -244,7 +248,7 @@ func createMigration(name string) error {
 	tpl = template.Must(template.New("new_migration").Parse(templateContent))
 
 	fileName := fmt.Sprintf("%s-%s.sql", time.Now().Format("20060102150405"), strings.TrimSpace(name))
-	pathName := path.Join("db/migrations", fileName)
+	pathName := path.Join(config.Database().MigrationPath, fileName)
 
 	f, err := os.Create(pathName)
 	if err != nil {

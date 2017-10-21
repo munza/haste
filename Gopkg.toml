@@ -25,3 +25,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
+
+[[constraint]]
+  name = "github.com/jinzhu/gorm"
+  version = "1.0.0"

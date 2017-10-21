@@ -1,3 +1,6 @@
 package auth
 
-type User struct{}
+type User struct {
+	ID   uint
+	Name string
+}

@@ -20,6 +20,18 @@
   version = "v1.3"
 
 [[projects]]
+  name = "github.com/jinzhu/gorm"
+  packages = ["."]
+  revision = "5174cc5c242a728b435ea2be8a2f7f998e15429b"
+  version = "v1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jinzhu/inflection"
+  packages = ["."]
+  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+
+[[projects]]
   name = "github.com/joho/godotenv"
   packages = [".","autoload"]
   revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
@@ -52,6 +64,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2e5d8c2431cf487dbcf3f014fd589254f6933b19a7923fba5019cda89a77f85f"
+  inputs-digest = "33b7a1373c2ff1b253c88c1f0250664f43f5215e8dd3a2d96bfa024ab582a2cf"
   solver-name = "gps-cdcl"
   solver-version = 1
